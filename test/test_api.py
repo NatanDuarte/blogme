@@ -1,7 +1,8 @@
-from api.api import app
+import pytest
 
-from fastapi.testclient import TestClient
 from http import HTTPStatus
+from api.api import app
+from fastapi.testclient import TestClient
 
 
 @pytest.fixture
@@ -19,3 +20,13 @@ def test_when_verify_integrity_format_should_be_json(client):
 def test_respose_should_have_content(client):
     response = client.get("/healthcheck")
     assert response.json() == {"status": "ok"}
+
+def test_create_post(client):
+    post_data = {
+        "title": "post title",
+        "content": "post content"
+    }
+
+    response = client.post("/posts", json=post_data)
+
+    assert response.status_code == HTTPStatus.CREATED
